@@ -1,5 +1,6 @@
 import { Auth, requireAuth } from 'remix/middleware/auth'
 import { redirect } from 'remix/response/redirect'
+import { getCsrfToken } from 'remix/middleware/csrf'
 import { createController } from 'remix/router'
 import { Session } from 'remix/session'
 import type { GoodAuth } from 'remix/middleware/auth'
@@ -19,7 +20,7 @@ export default createController(routes, {
       return (await assets.fetch(context.request)) ?? new Response('Not Found', { status: 404 })
     },
     home(context) {
-      return context.render(<HomePage i18n={context.i18n} />)
+      return context.render(<HomePage i18n={context.i18n} csrfToken={getCsrfToken(context)} />)
     },
     async setLocale(context) {
       let locale = context.formData.get('locale')
@@ -45,11 +46,19 @@ export default createController(routes, {
       ],
       handler(context) {
         let auth = context.get(Auth) as GoodAuth<Identity>
-        return context.render(<AccountPage i18n={context.i18n} email={auth.identity.email} />)
+        return context.render(
+          <AccountPage
+            i18n={context.i18n}
+            csrfToken={getCsrfToken(context)}
+            email={auth.identity.email}
+          />,
+        )
       },
     },
     signupSuccess(context) {
-      return context.render(<SignupSuccessPage i18n={context.i18n} />)
+      return context.render(
+        <SignupSuccessPage i18n={context.i18n} csrfToken={getCsrfToken(context)} />,
+      )
     },
   },
 })

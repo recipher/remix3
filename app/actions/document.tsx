@@ -8,6 +8,7 @@ import { LocaleSwitcher } from '../ui/locale-switcher.tsx'
 
 export interface DocumentProps {
   i18n: I18n
+  csrfToken: string
   children?: RemixNode
   head?: RemixNode
   title?: string
@@ -17,7 +18,7 @@ const DEFAULT_TITLE = readAppDisplayName('Remix3')
 
 export function Document(handle: Handle<DocumentProps>) {
   return () => {
-    let { children, head, i18n, title = DEFAULT_TITLE } = handle.props
+    let { children, head, i18n, csrfToken, title = DEFAULT_TITLE } = handle.props
     let { href, importMap, preloads } = scriptEntry
 
     return (
@@ -37,7 +38,7 @@ export function Document(handle: Handle<DocumentProps>) {
           <script type="module" src={href}></script>
         </head>
         <body mix={css({ margin: 0 })}>
-          <LocaleSwitcher i18n={i18n} />
+          <LocaleSwitcher i18n={i18n} csrfToken={csrfToken} />
           {children}
         </body>
       </html>

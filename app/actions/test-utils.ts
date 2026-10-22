@@ -8,12 +8,40 @@ export function get(path: string, cookie?: string): Promise<Response> {
   )
 }
 
-export function post(path: string, body: Record<string, string>, cookie?: string): Promise<Response> {
+export interface PostOptions {
+  /** Fetch a CSRF token first and send it with the request. Defaults to true. */
+  csrf?: boolean
+  headers?: Record<string, string>
+}
+
+/** Loads a page to start a session and read the CSRF token rendered into its forms. */
+export async function getCsrf(cookie?: string): Promise<{ token: string; cookie: string }> {
+  let response = await get('/login', cookie)
+  let html = await response.text()
+  let token = html.match(/name="_csrf"[^>]*value="([^"]+)"/)?.[1] ?? ''
+  return { token, cookie: sessionCookieFrom(response) || cookie || '' }
+}
+
+/** POSTs a form. By default it first fetches a valid CSRF token, like a browser would. */
+export async function post(
+  path: string,
+  body: Record<string, string>,
+  cookie?: string,
+  { csrf = true, headers = {} }: PostOptions = {},
+): Promise<Response> {
+  let fields = { ...body }
+
+  if (csrf) {
+    let session = await getCsrf(cookie)
+    fields = { _csrf: session.token, ...body }
+    cookie = session.cookie
+  }
+
   return router.fetch(
     new Request(new URL(path, origin), {
       method: 'POST',
-      headers: cookie ? { Cookie: cookie } : {},
-      body: new URLSearchParams(body),
+      headers: { ...headers, ...(cookie ? { Cookie: cookie } : {}) },
+      body: new URLSearchParams(fields),
     }),
   )
 }
