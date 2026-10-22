@@ -12,6 +12,7 @@
     "db:status": "remix db status",
     "db:rollback": "remix db rollback",
     "test": "NODE_ENV=test remix test",
+    "test:coverage": "NODE_ENV=test remix test --coverage",
     "typecheck": "tsc --noEmit"
   },
   "engines": {

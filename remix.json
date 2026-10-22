@@ -15,6 +15,17 @@
     "playwright": {
       "configFile": "./playwright.config.ts",
       "projects": ["chromium"]
+    },
+    "coverage": {
+      // `npm run test:coverage` (or `npm test -- --coverage`) enforces these minimums.
+      "enabled": false,
+      "dir": ".coverage",
+      "include": ["app/**/*.{ts,tsx}"],
+      "exclude": ["app/**/*.test{,.browser,.e2e}.{ts,tsx}", "app/actions/test-utils.ts"],
+      "statements": 97,
+      "lines": 97,
+      "branches": 90,
+      "functions": 95
     }
   }
 }
