@@ -1,5 +1,6 @@
 import { completeAuth, verifyCredentials } from 'remix/auth'
 import { redirect } from 'remix/response/redirect'
+import { getCsrfToken } from 'remix/middleware/csrf'
 import { createController } from 'remix/router'
 
 import { passwordProvider } from '../../data/auth.ts'
@@ -10,7 +11,7 @@ import { LoginPage } from './page.tsx'
 export default createController(routes.login, {
   actions: {
     index(context) {
-      return context.render(<LoginPage i18n={context.i18n} />)
+      return context.render(<LoginPage i18n={context.i18n} csrfToken={getCsrfToken(context)} />)
     },
     async action(context) {
       let identity = await verifyCredentials(passwordProvider, context)
@@ -20,6 +21,7 @@ export default createController(routes.login, {
         return context.render(
           <LoginPage
             i18n={context.i18n}
+            csrfToken={getCsrfToken(context)}
             email={typeof email === 'string' ? email : ''}
             error={context.i18n.t('login.invalid')}
           />,

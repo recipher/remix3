@@ -4,10 +4,12 @@ import type { Issue } from 'remix/data-schema'
 import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '../../data/password-rules.ts'
 import type { I18n } from '../../i18n/index.ts'
 import { routes } from '../../routes.ts'
+import { CsrfField } from '../../ui/csrf-field.tsx'
 import { buttonClass, CardPage, ErrorAlert, Field, linkClass } from '../../ui/layout.tsx'
 
 export interface SignupPageProps {
   i18n: I18n
+  csrfToken: string
   email?: string
   issues?: readonly Issue[]
   error?: string
@@ -15,16 +17,17 @@ export interface SignupPageProps {
 
 export function SignupPage(handle: Handle<SignupPageProps>) {
   return () => {
-    let { i18n, email = '', issues = [], error } = handle.props
+    let { i18n, csrfToken, email = '', issues = [], error } = handle.props
     let { t } = i18n
     let params = { min: PASSWORD_MIN_LENGTH, max: PASSWORD_MAX_LENGTH }
     // Schema messages are English, so show a translated message per failing field.
     let hasIssue = (name: string) => issues.some((issue) => issue.path?.[0] === name)
 
     return (
-      <CardPage i18n={i18n} title={t('signup.title')}>
+      <CardPage i18n={i18n} csrfToken={csrfToken} title={t('signup.title')}>
         {error && <ErrorAlert>{error}</ErrorAlert>}
         <form method="post" action={routes.signup.action.href()} class="flex flex-col gap-4">
+          <CsrfField token={csrfToken} />
           <Field
             id="email"
             label={t('signup.email')}
@@ -59,13 +62,18 @@ export function SignupPage(handle: Handle<SignupPageProps>) {
   }
 }
 
-export function SignupSuccessPage(handle: Handle<{ i18n: I18n }>) {
+export function SignupSuccessPage(handle: Handle<{ i18n: I18n; csrfToken: string }>) {
   return () => {
-    let { i18n } = handle.props
+    let { i18n, csrfToken } = handle.props
     let { t } = i18n
 
     return (
-      <CardPage i18n={i18n} title={t('success.pageTitle')} heading={t('success.title')}>
+      <CardPage
+        i18n={i18n}
+        csrfToken={csrfToken}
+        title={t('success.pageTitle')}
+        heading={t('success.title')}
+      >
         <p class="mb-6 text-gray-600 dark:text-gray-400">{t('success.body')}</p>
         <a href={routes.login.index.href()} class={buttonClass + ' block text-center'}>
           {t('success.login')}

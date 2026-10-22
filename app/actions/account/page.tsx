@@ -2,16 +2,17 @@ import type { Handle } from 'remix/component'
 
 import type { I18n } from '../../i18n/index.ts'
 import { routes } from '../../routes.ts'
+import { CsrfField } from '../../ui/csrf-field.tsx'
 import { CardPage } from '../../ui/layout.tsx'
 import { CopyButton } from '../../ui/public/copy-button.tsx'
 
-export function AccountPage(handle: Handle<{ i18n: I18n; email: string }>) {
+export function AccountPage(handle: Handle<{ i18n: I18n; csrfToken: string; email: string }>) {
   return () => {
-    let { i18n, email } = handle.props
+    let { i18n, csrfToken, email } = handle.props
     let { t } = i18n
 
     return (
-      <CardPage i18n={i18n} title={t('account.title')}>
+      <CardPage i18n={i18n} csrfToken={csrfToken} title={t('account.title')}>
         <p class="mb-1 text-sm text-gray-500 dark:text-gray-400">{t('account.signedInAs')}</p>
         <p class="mb-3 break-all font-medium">{email}</p>
         <div class="mb-6">
@@ -23,6 +24,7 @@ export function AccountPage(handle: Handle<{ i18n: I18n; email: string }>) {
           />
         </div>
         <form method="post" action={routes.logout.href()}>
+          <CsrfField token={csrfToken} />
           <button
             type="submit"
             class="w-full cursor-pointer rounded-lg border border-gray-300 px-4 py-2 font-medium transition hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700"

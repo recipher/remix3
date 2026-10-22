@@ -25,6 +25,13 @@ The app ships with English (`en`) and Spanish (`es`). The locale is chosen per r
 - `app/ui/locale-switcher.tsx` renders the language switcher in every page through `Document`. It posts to `/locale`, which saves the cookie and redirects back.
 - To add a language, add an entry to `LOCALE_NAMES` in `app/i18n/index.ts` and create `app/i18n/messages/<locale>.ts`.
 
+## CSRF protection
+
+The `csrf()` middleware runs after the session and form parsing middleware and validates every unsafe request (`POST`, `PUT`, `PATCH`, `DELETE`): the token in the `_csrf` form field (or an `X-Csrf-Token` header) must match the session's token, and `Origin`/`Referer` must be same-origin. Failures return `403`.
+
+- Actions pass `getCsrfToken(context)` to pages, and every `<form method="post">` renders `<CsrfField token={csrfToken} />` from `app/ui/csrf-field.tsx`.
+- In tests, `post()` from `app/actions/test-utils.ts` fetches a token first, like a browser. Pass `{ csrf: false }` to test rejection.
+
 ## Growing The App
 
 - Put top-level route actions in `app/actions/controller.tsx`.

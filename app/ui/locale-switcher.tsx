@@ -3,11 +3,12 @@ import type { Handle } from 'remix/component'
 import { LOCALES, LOCALE_NAMES } from '../i18n/index.ts'
 import type { I18n } from '../i18n/index.ts'
 import { routes } from '../routes.ts'
+import { CsrfField } from './csrf-field.tsx'
 
 /** Plain form so switching language works without JavaScript. */
-export function LocaleSwitcher(handle: Handle<{ i18n: I18n }>) {
+export function LocaleSwitcher(handle: Handle<{ i18n: I18n; csrfToken: string }>) {
   return () => {
-    let { i18n } = handle.props
+    let { i18n, csrfToken } = handle.props
 
     return (
       <form
@@ -16,6 +17,7 @@ export function LocaleSwitcher(handle: Handle<{ i18n: I18n }>) {
         aria-label={i18n.t('language.label')}
         class="fixed right-4 top-4 z-10 flex gap-1 rounded-full bg-white/80 p-1 text-xs shadow backdrop-blur dark:bg-gray-800/80"
       >
+        <CsrfField token={csrfToken} />
         <input type="hidden" name="returnTo" value={i18n.returnTo} />
         {LOCALES.map((locale) => (
           <button

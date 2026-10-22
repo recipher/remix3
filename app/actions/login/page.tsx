@@ -2,23 +2,26 @@ import type { Handle } from 'remix/component'
 
 import type { I18n } from '../../i18n/index.ts'
 import { routes } from '../../routes.ts'
+import { CsrfField } from '../../ui/csrf-field.tsx'
 import { buttonClass, CardPage, ErrorAlert, Field, linkClass } from '../../ui/layout.tsx'
 
 export interface LoginPageProps {
   i18n: I18n
+  csrfToken: string
   email?: string
   error?: string
 }
 
 export function LoginPage(handle: Handle<LoginPageProps>) {
   return () => {
-    let { i18n, email = '', error } = handle.props
+    let { i18n, csrfToken, email = '', error } = handle.props
     let { t } = i18n
 
     return (
-      <CardPage i18n={i18n} title={t('login.title')}>
+      <CardPage i18n={i18n} csrfToken={csrfToken} title={t('login.title')}>
         {error && <ErrorAlert>{error}</ErrorAlert>}
         <form method="post" action={routes.login.action.href()} class="flex flex-col gap-4">
+          <CsrfField token={csrfToken} />
           <Field
             id="email"
             label={t('login.email')}

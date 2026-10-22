@@ -63,24 +63,22 @@ describe('localization', () => {
 
   it('translates validation and login errors', async () => {
     let headers = { 'Accept-Language': 'es' }
-    let signup = await router.fetch(
-      new Request('http://localhost/signup', {
-        method: 'POST',
-        headers,
-        body: new URLSearchParams({ email: 'nope', password: 'x' }),
-      }),
+    let signup = await post(
+      routes.signup.action.href(),
+      { email: 'nope', password: 'x' },
+      undefined,
+      { headers },
     )
     assert.equal(signup.status, 400)
     let html = await signup.text()
     assert.match(html, /Introduce un correo electrónico válido/)
     assert.match(html, /entre 8 y 200 caracteres/)
 
-    let login = await router.fetch(
-      new Request('http://localhost/login', {
-        method: 'POST',
-        headers,
-        body: new URLSearchParams({ email: uniqueEmail('x'), password }),
-      }),
+    let login = await post(
+      routes.login.action.href(),
+      { email: uniqueEmail('x'), password },
+      undefined,
+      { headers },
     )
     assert.equal(login.status, 401)
     assert.match(await login.text(), /Correo o contraseña incorrectos/)

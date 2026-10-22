@@ -15,15 +15,16 @@ export const linkClass = 'font-medium text-blue-600 hover:underline dark:text-bl
 export function CardPage(
   handle: Handle<{
     i18n: I18n
+    csrfToken: string
     title: string
     heading?: string
     children?: RemixNode
   }>,
 ) {
   return () => {
-    let { i18n, title, heading = title, children } = handle.props
+    let { i18n, csrfToken, title, heading = title, children } = handle.props
     return (
-      <Document i18n={i18n} title={title}>
+      <Document i18n={i18n} csrfToken={csrfToken} title={title}>
         <main class="flex min-h-screen items-center justify-center bg-gray-100 p-6 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
           <div class="w-full max-w-sm rounded-2xl bg-white p-8 shadow-lg dark:bg-gray-800">
             <h1 class="mb-6 text-2xl font-bold tracking-tight">{heading}</h1>

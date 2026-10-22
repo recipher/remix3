@@ -1,5 +1,6 @@
 import * as s from 'remix/data-schema'
 import { redirect } from 'remix/response/redirect'
+import { getCsrfToken } from 'remix/middleware/csrf'
 import { createController } from 'remix/router'
 
 import { hashPassword } from '../../data/password.ts'
@@ -12,7 +13,7 @@ import { signupForm } from './schema.ts'
 export default createController(routes.signup, {
   actions: {
     index(context) {
-      return context.render(<SignupPage i18n={context.i18n} />)
+      return context.render(<SignupPage i18n={context.i18n} csrfToken={getCsrfToken(context)} />)
     },
     async action(context) {
       let parsed = s.parseSafe(signupForm, context.formData)
@@ -21,6 +22,7 @@ export default createController(routes.signup, {
         return context.render(
           <SignupPage
             i18n={context.i18n}
+            csrfToken={getCsrfToken(context)}
             email={typeof email === 'string' ? email : ''}
             issues={parsed.issues}
           />,
@@ -34,6 +36,7 @@ export default createController(routes.signup, {
         return context.render(
           <SignupPage
             i18n={context.i18n}
+            csrfToken={getCsrfToken(context)}
             email={email}
             error={context.i18n.t('signup.emailTaken')}
           />,

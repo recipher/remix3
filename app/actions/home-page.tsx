@@ -6,12 +6,12 @@ import { routes } from '../routes.ts'
 import { Document } from './document.tsx'
 import { CopyButton } from '../ui/public/copy-button.tsx'
 
-export function HomePage(handle: Handle<{ i18n: I18n }>) {
+export function HomePage(handle: Handle<{ i18n: I18n; csrfToken: string }>) {
   return () => {
-    let { i18n } = handle.props
+    let { i18n, csrfToken } = handle.props
 
     return (
-      <Document i18n={i18n} head={<HomeHead />}>
+      <Document i18n={i18n} csrfToken={csrfToken} head={<HomeHead />}>
         <main class="m-0 flex min-h-screen items-center justify-center bg-gray-100 px-6 py-12 font-mono text-sm leading-normal text-gray-900 antialiased dark:bg-gray-900 dark:text-gray-100 [&_*]:box-border">
           <div class="flex w-full max-w-[820px] flex-col items-center gap-[72px]">
             <Masthead i18n={i18n} />

@@ -1,5 +1,6 @@
 import { createRouter, type MiddlewareContext } from 'remix/router'
 import { auth, requireAuth } from 'remix/middleware/auth'
+import { csrf } from 'remix/middleware/csrf'
 import { formData } from 'remix/middleware/form-data'
 import { compression } from 'remix/middleware/compression'
 import { render } from 'remix/middleware/render'
@@ -19,12 +20,14 @@ const renderMiddleware = render({ assets })
 const localeMiddleware = loadLocale()
 const sessionMiddleware = session(sessionCookie, sessionStorage)
 const formDataMiddleware = formData()
+const csrfMiddleware = csrf()
 const authMiddleware = auth({ schemes: [sessionAuthScheme] })
 type AppContext = MiddlewareContext<
   [
     typeof localeMiddleware,
     typeof sessionMiddleware,
     typeof formDataMiddleware,
+    typeof csrfMiddleware,
     typeof authMiddleware,
     typeof renderMiddleware,
   ]
@@ -43,6 +46,7 @@ export const router = createRouter<AppContext>({
     localeMiddleware,
     sessionMiddleware,
     formDataMiddleware,
+    csrfMiddleware,
     authMiddleware,
     renderMiddleware,
   ],
