@@ -1,59 +1,15 @@
 // Delete this file and put your own home page in app/actions/controller.tsx
 import type { Handle, RemixNode } from 'remix/component'
-import { css } from 'remix/component'
 
+import { routes } from '../routes.ts'
 import { Document } from './document.tsx'
-import { PromptButton } from './public/prompt-button.tsx'
-
-const FONT_STACK =
-  "'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace"
+import { CopyButton } from '../ui/public/copy-button.tsx'
 
 export function HomePage() {
   return () => (
     <Document head={<HomeHead />}>
-      <main
-        mix={css({
-          // Light-mode design tokens (default).
-          '--surface-0': '#dee2e6',
-          '--surface-3': '#f0f4f7',
-          '--surface-4': '#f7fbff',
-          '--text-primary': '#313539',
-          '--text-tertiary': '#94989c',
-          '--brand-blue': '#2dacf9',
-          // Dark-mode overrides.
-          '@media (prefers-color-scheme: dark)': {
-            '--surface-0': '#1e2226',
-            '--surface-3': '#313539',
-            '--surface-4': '#363a3e',
-            '--text-primary': '#dee2e6',
-            '--text-tertiary': '#94989c',
-          },
-          '& *, & *::before, & *::after': { boxSizing: 'border-box' },
-          margin: 0,
-          padding: '48px 24px',
-          minHeight: '100vh',
-          background: 'var(--surface-0)',
-          color: 'var(--text-primary)',
-          fontFamily: FONT_STACK,
-          fontSize: '14px',
-          lineHeight: 1.5,
-          WebkitFontSmoothing: 'antialiased',
-          MozOsxFontSmoothing: 'grayscale',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        })}
-      >
-        <div
-          mix={css({
-            width: '100%',
-            maxWidth: '820px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '72px',
-          })}
-        >
+      <main class="m-0 flex min-h-screen items-center justify-center bg-gray-100 px-6 py-12 font-mono text-sm leading-normal text-gray-900 antialiased dark:bg-gray-900 dark:text-gray-100 [&_*]:box-border">
+        <div class="flex w-full max-w-[820px] flex-col items-center gap-[72px]">
           <Masthead />
           <Columns />
           <Footer />
@@ -78,31 +34,8 @@ function HomeHead() {
 
 function Masthead() {
   return () => (
-    <section
-      aria-label="Welcome"
-      mix={css({
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '36px',
-        width: '100%',
-      })}
-    >
-      <p
-        mix={css({
-          margin: 0,
-          fontWeight: 700,
-          fontSize: '14px',
-          lineHeight: 1.33,
-          textTransform: 'uppercase',
-          letterSpacing: '0.1em',
-          color: 'var(--text-primary)',
-          textAlign: 'center',
-        })}
-      >
-        Welcome to
-      </p>
+    <section aria-label="Welcome" class="flex w-full flex-col items-center justify-center gap-9">
+      <p class="m-0 text-center text-sm font-bold uppercase tracking-[0.1em]">Welcome to</p>
       <RemixWordmarkHero />
     </section>
   )
@@ -112,17 +45,7 @@ function Columns() {
   return () => (
     <section
       aria-label="Getting started"
-      mix={css({
-        display: 'flex',
-        gap: '16px',
-        alignItems: 'stretch',
-        justifyContent: 'center',
-        width: 'auto',
-        '@media (max-width: 720px)': {
-          flexDirection: 'column',
-          width: '100%',
-        },
-      })}
+      class="flex w-full flex-col items-stretch justify-center gap-4 min-[721px]:w-auto min-[721px]:flex-row"
     >
       <GetStartedCard />
       <CodingWithAiCard />
@@ -132,19 +55,15 @@ function Columns() {
 
 function GetStartedCard() {
   return () => (
-    <div mix={[cardStyle, css({ flex: '0 0 auto' })]}>
-      <h2 mix={cardHeaderStyle}>Get started</h2>
-      <ul
-        mix={css({
-          listStyle: 'none',
-          margin: 0,
-          padding: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'stretch',
-          width: '100%',
-        })}
-      >
+    <Card class="flex-none">
+      <CardHeader>Get started</CardHeader>
+      <ul class="m-0 flex w-full list-none flex-col items-stretch p-0">
+        <li>
+          <CardLink href={routes.signup.index.href()} icon={<UserPlusIcon />} label="Sign up" />
+        </li>
+        <li>
+          <CardLink href={routes.login.index.href()} icon={<LoginIcon />} label="Log in" />
+        </li>
         <li>
           <CardLink href="https://api.remix.run" icon={<AtomIcon />} label="Remix API" />
         </li>
@@ -156,49 +75,54 @@ function GetStartedCard() {
           />
         </li>
       </ul>
-    </div>
+    </Card>
   )
 }
 
 function CodingWithAiCard() {
   return () => (
-    <div
-      mix={[
-        cardStyle,
-        css({
-          width: '540px',
-          justifyContent: 'center',
-          '@media (max-width: 720px)': { width: '100%' },
-        }),
-      ]}
-    >
-      <h2 mix={cardHeaderStyle}>Coding with AI?</h2>
-      <div
-        mix={css({
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'stretch',
-        })}
-      >
-        <p
-          mix={css({
-            margin: 0,
-            padding: '0 16px 16px',
-            fontSize: '14px',
-            lineHeight: 1.67,
-            color: 'var(--text-primary)',
-          })}
-        >
+    <Card class="justify-center max-[720px]:w-full min-[721px]:w-[540px]">
+      <CardHeader>Coding with AI?</CardHeader>
+      <div class="flex w-full flex-col items-stretch">
+        <p class="m-0 px-4 pb-4 text-sm leading-[1.67] text-gray-600 dark:text-gray-400">
           Navigate to this project folder using your preferred AI-powered tool, and try copying any
           of these prompts into the agent chat:
         </p>
-        <PromptButton text="I want to build a simple headless Shopify store, what does Remix have available to help scaffold this?" />
-        <PromptButton text="Add a sqlite database with a users table and scaffold a signup flow" />
-        <PromptButton text="Make a copy to clipboard component that confirms to the user it was copied then resets after a few seconds" />
-        <PromptButton text="Add compression middleware" />
+        <PromptRow text="I want to build a simple headless Shopify store, what does Remix have available to help scaffold this?" />
+        <PromptRow text="Add a sqlite database with a users table and scaffold a signup flow" />
+        <PromptRow text="Make a copy to clipboard component that confirms to the user it was copied then resets after a few seconds" />
+        <PromptRow text="Add compression middleware" />
+      </div>
+    </Card>
+  )
+}
+
+function PromptRow(handle: Handle<{ text: string }>) {
+  return () => (
+    <div class="flex items-center gap-4 rounded-xl p-4 transition-colors duration-150 hover:bg-gray-100 dark:hover:bg-gray-700">
+      <p class="m-0 min-w-0 flex-1 text-sm leading-normal">&ldquo;{handle.props.text}&rdquo;</p>
+      <div class="flex-none">
+        <CopyButton text={handle.props.text} />
       </div>
     </div>
+  )
+}
+
+function Card(handle: Handle<{ class?: string; children?: RemixNode }>) {
+  return () => (
+    <div
+      class={`flex flex-col items-center gap-6 rounded-2xl bg-white p-8 shadow-lg dark:bg-gray-800 ${handle.props.class ?? ''}`}
+    >
+      {handle.props.children}
+    </div>
+  )
+}
+
+function CardHeader(handle: Handle<{ children?: RemixNode }>) {
+  return () => (
+    <h2 class="m-0 w-full text-2xl font-bold tracking-tight">
+      {handle.props.children}
+    </h2>
   )
 }
 
@@ -209,100 +133,34 @@ function CardLink(handle: Handle<{ href: string; icon: RemixNode; label: string 
     return (
       <a
         href={href}
-        mix={css({
-          display: 'flex',
-          gap: '16px',
-          alignItems: 'center',
-          padding: '16px',
-          borderRadius: '12px',
-          color: 'var(--text-primary)',
-          textDecoration: 'none',
-          background: 'transparent',
-          transition: 'background-color 150ms ease, color 150ms ease',
-          '&:hover, &:focus-visible': {
-            background: 'var(--surface-4)',
-            color: 'var(--brand-blue)',
-            outline: 'none',
-          },
-        })}
+        class="flex items-center gap-4 rounded-xl bg-transparent p-4 no-underline transition-colors duration-150 hover:bg-gray-100 hover:text-blue-600 focus-visible:bg-gray-100 focus-visible:text-blue-600 focus-visible:outline-none dark:hover:bg-gray-700 dark:hover:text-blue-400 dark:focus-visible:bg-gray-700 dark:focus-visible:text-blue-400"
       >
         <IconSlot>{icon}</IconSlot>
-        <span mix={css({ fontSize: '14px', lineHeight: 1.5, whiteSpace: 'nowrap' })}>{label}</span>
+        <span class="whitespace-nowrap text-sm">{label}</span>
       </a>
     )
   }
 }
 
-function IconSlot(handle: Handle<{ children: RemixNode; rotated?: boolean }>) {
-  return () => {
-    let { children, rotated = false } = handle.props
-
-    return (
-      <span
-        aria-hidden="true"
-        mix={css({
-          flex: '0 0 24px',
-          width: '24px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: rotated ? 'center' : 'flex-start',
-          '& svg': {
-            width: '20px',
-            height: '20px',
-            display: 'block',
-            ...(rotated ? { transform: 'rotate(180deg)' } : {}),
-          },
-        })}
-      >
-        {children}
-      </span>
-    )
-  }
+function IconSlot(handle: Handle<{ children: RemixNode }>) {
+  return () => (
+    <span
+      aria-hidden="true"
+      class="flex w-6 flex-none items-center justify-start [&_svg]:block [&_svg]:size-5"
+    >
+      {handle.props.children}
+    </span>
+  )
 }
 
 function Footer() {
   return () => (
-    <footer
-      mix={css({
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '10px',
-      })}
-    >
-      <div
-        mix={css({
-          display: 'flex',
-          gap: '24px',
-          alignItems: 'center',
-          justifyContent: 'center',
-        })}
-      >
+    <footer class="flex flex-col items-center justify-center gap-2.5">
+      <div class="flex items-center justify-center gap-6">
         <FooterWordmark />
         <nav
           aria-label="Remix social links"
-          mix={css({
-            display: 'flex',
-            gap: '16px',
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-            color: 'var(--text-tertiary)',
-            '& a': {
-              width: '20px',
-              height: '20px',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'inherit',
-              transition: 'color 150ms ease',
-            },
-            '& a:hover, & a:focus-visible': {
-              color: 'var(--text-primary)',
-              outline: 'none',
-            },
-            '& svg': { width: '100%', height: '100%', display: 'block' },
-          })}
+          class="flex items-center justify-end gap-4 text-gray-500 dark:text-gray-400 [&_a]:inline-flex [&_a]:size-5 [&_a]:items-center [&_a]:justify-center [&_a]:text-inherit [&_a]:transition-colors [&_a]:duration-150 [&_a:focus-visible]:text-gray-900 [&_a:focus-visible]:outline-none [&_a:hover]:text-gray-900 dark:[&_a:focus-visible]:text-gray-100 dark:[&_a:hover]:text-gray-100 [&_svg]:block [&_svg]:size-full"
         >
           <a href="https://github.com/remix-run/remix" aria-label="GitHub">
             <GitHubIcon />
@@ -318,21 +176,7 @@ function Footer() {
           </a>
         </nav>
       </div>
-      <div
-        mix={css({
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '12px',
-          fontSize: '10px',
-          lineHeight: 1.6,
-          letterSpacing: '0.05em',
-          color: 'var(--text-tertiary)',
-          textAlign: 'center',
-          '& p': { margin: 0, whiteSpace: 'nowrap' },
-        })}
-      >
+      <div class="flex flex-col items-center justify-center gap-3 text-center text-[10px] leading-[1.6] tracking-[0.05em] text-gray-500 dark:text-gray-400 [&_p]:m-0 [&_p]:whitespace-nowrap">
         <p>DOCS AND EXAMPLES LICENSED UNDER MIT</p>
         <p>&copy;2026 SHOPIFY, INC.</p>
       </div>
@@ -340,29 +184,21 @@ function Footer() {
   )
 }
 
-const cardStyle = css({
-  background: 'var(--surface-3)',
-  borderRadius: '20px',
-  padding: '32px 16px 16px',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  gap: '32px',
-})
+function UserPlusIcon() {
+  return () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 19a6 6 0 0 0-12 0M9 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM19 8v6M22 11h-6" />
+    </svg>
+  )
+}
 
-const cardHeaderStyle = css({
-  margin: 0,
-  width: '100%',
-  padding: '0 16px',
-  display: 'flex',
-  alignItems: 'flex-start',
-  fontSize: '14px',
-  fontWeight: 700,
-  lineHeight: 1.5,
-  textTransform: 'uppercase',
-  letterSpacing: '0.1em',
-  color: 'var(--text-primary)',
-})
+function LoginIcon() {
+  return () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3" />
+    </svg>
+  )
+}
 
 // ----- SVG icons -----
 // Inline so the page is fully self-contained with no external icon assets.
@@ -441,19 +277,12 @@ function DiscordIcon() {
 
 function FooterWordmark() {
   // Same wordmark used for both light and dark mode; the text paths use
-  // currentColor so they inherit `--text-primary` from <body>.
+  // currentColor so they inherit the page text color.
   return () => (
     <span
       role="img"
       aria-label="Remix"
-      mix={css({
-        display: 'block',
-        height: '8px',
-        width: 'calc(8px * 163 / 16)',
-        color: 'var(--text-primary)',
-        opacity: 0.55,
-        '& svg': { display: 'block', width: '100%', height: '100%' },
-      })}
+      class="block h-2 w-[calc(8px*163/16)] text-gray-900 opacity-55 dark:text-gray-100 [&_svg]:block [&_svg]:size-full"
     >
       <svg viewBox="0 0 163 16" fill="currentColor" aria-hidden="true">
         <path d="M11.5566 11.5024C11.9535 11.5025 12.2424 11.8811 12.1396 12.2661L11.1846 15.8481H0.0673828L1.22656 11.5024H11.5566ZM30.1533 0.0180664V0.019043C34.3663 0.0191833 37.2765 1.9102 36.6543 4.24268L36.2324 5.82178C35.6099 8.15428 31.6907 10.0454 27.4775 10.0454H27.0469L35.8965 15.8481H21.6875L14.5332 10.3257C14.247 10.1423 13.9147 10.0454 13.5752 10.0454H1.61523L2.74219 5.8208H23.6904C24.4776 5.82071 25.2104 5.4677 25.3271 5.03174C25.4436 4.59555 24.8992 4.2417 24.1113 4.2417H3.16406L4.29102 0.0180664H30.1533Z" />
@@ -469,18 +298,13 @@ function FooterWordmark() {
 function RemixWordmarkHero() {
   // Single SVG used for both themes: bracket characters keep their decorative
   // colors; the "REMIX" letterforms use currentColor so they inherit
-  // `--text-primary` from <body> (light or dark).
+  // the page text color (light or dark).
   return () => (
     <svg
       role="img"
       aria-label="Remix"
       viewBox="0 0 820 73"
-      mix={css({
-        width: '100%',
-        height: 'auto',
-        display: 'block',
-        color: 'var(--text-primary)',
-      })}
+      class="block h-auto w-full text-gray-900 dark:text-gray-100"
     >
       <path d="M53.1347 52.3526H37.3303L32.0532 72.1341H47.8519L53.1347 52.3526Z" fill="#FFDF5F" />
       <path d="M44.2314 26.4861L39.1011 45.7148H54.9079L60.0431 26.4861H44.2314Z" fill="#FFDF5F" />

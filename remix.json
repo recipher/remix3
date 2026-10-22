@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/remix/schema/remix.json",
+  "db": {
+    "adapter": {
+      "type": "sqlite",
+      "filename": "./db/app.sqlite",
+      "foreignKeys": true
+    },
+    "migrations": {
+      "directory": "./db/migrations"
+    }
+  },
+  "test": {
+    "exclude": ["node_modules/**", "tmp/**"],
+    "playwright": {
+      "configFile": "./playwright.config.ts",
+      "projects": ["chromium"]
+    }
+  }
+}

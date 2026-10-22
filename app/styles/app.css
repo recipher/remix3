@@ -1,0 +1,4 @@
+@import 'tailwindcss';
+
+/* Tailwind scans app/ for class names. */
+@source '../';

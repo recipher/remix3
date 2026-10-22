@@ -1,7 +1,7 @@
 import type { Handle } from 'remix/component'
 
 import { routes } from '../../routes.ts'
-import { Document } from '../document.tsx'
+import { buttonClass, CardPage, ErrorAlert, Field, linkClass } from '../../ui/layout.tsx'
 
 export interface LoginPageProps {
   email?: string
@@ -13,39 +13,22 @@ export function LoginPage(handle: Handle<LoginPageProps>) {
     let { email = '', error } = handle.props
 
     return (
-      <Document title="Log in">
-        <main>
-          <h1>Log in</h1>
-          {error && <p role="alert">{error}</p>}
-          <form method="post" action={routes.login.action.href()}>
-            <div>
-              <label htmlFor="email">Email</label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                defaultValue={email}
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="password">Password</label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-              />
-            </div>
-            <button type="submit">Log in</button>
-          </form>
-          <p>
-            No account? <a href={routes.signup.index.href()}>Sign up</a>
-          </p>
-        </main>
-      </Document>
+      <CardPage title="Log in">
+        {error && <ErrorAlert>{error}</ErrorAlert>}
+        <form method="post" action={routes.login.action.href()} class="flex flex-col gap-4">
+          <Field id="email" label="Email" type="email" autoComplete="email" defaultValue={email} />
+          <Field id="password" label="Password" type="password" autoComplete="current-password" />
+          <button type="submit" class={buttonClass}>
+            Log in
+          </button>
+        </form>
+        <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+          No account?{' '}
+          <a href={routes.signup.index.href()} class={linkClass}>
+            Sign up
+          </a>
+        </p>
+      </CardPage>
     )
   }
 }
