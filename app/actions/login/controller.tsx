@@ -10,7 +10,7 @@ import { LoginPage } from './page.tsx'
 export default createController(routes.login, {
   actions: {
     index(context) {
-      return context.render(<LoginPage />)
+      return context.render(<LoginPage i18n={context.i18n} />)
     },
     async action(context) {
       let identity = await verifyCredentials(passwordProvider, context)
@@ -19,8 +19,9 @@ export default createController(routes.login, {
         let email = context.formData.get('email')
         return context.render(
           <LoginPage
+            i18n={context.i18n}
             email={typeof email === 'string' ? email : ''}
-            error="Invalid email or password."
+            error={context.i18n.t('login.invalid')}
           />,
           { status: 401 },
         )

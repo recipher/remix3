@@ -1,6 +1,7 @@
 import type { Handle, RemixNode } from 'remix/component'
 
 import { Document } from '../actions/document.tsx'
+import type { I18n } from '../i18n/index.ts'
 
 export const inputClass =
   'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 aria-[invalid=true]:border-red-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100'
@@ -11,11 +12,18 @@ export const buttonClass =
 export const linkClass = 'font-medium text-blue-600 hover:underline dark:text-blue-400'
 
 /** Centered card on a tinted page background, used by the auth pages. */
-export function CardPage(handle: Handle<{ title: string; heading?: string; children?: RemixNode }>) {
+export function CardPage(
+  handle: Handle<{
+    i18n: I18n
+    title: string
+    heading?: string
+    children?: RemixNode
+  }>,
+) {
   return () => {
-    let { title, heading = title, children } = handle.props
+    let { i18n, title, heading = title, children } = handle.props
     return (
-      <Document title={title}>
+      <Document i18n={i18n} title={title}>
         <main class="flex min-h-screen items-center justify-center bg-gray-100 p-6 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
           <div class="w-full max-w-sm rounded-2xl bg-white p-8 shadow-lg dark:bg-gray-800">
             <h1 class="mb-6 text-2xl font-bold tracking-tight">{heading}</h1>

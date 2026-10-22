@@ -3,8 +3,11 @@ import { css } from 'remix/component'
 import { ImportMap } from 'remix/component/server'
 
 import { scriptEntry } from '../assets.ts'
+import type { I18n } from '../i18n/index.ts'
+import { LocaleSwitcher } from '../ui/locale-switcher.tsx'
 
 export interface DocumentProps {
+  i18n: I18n
   children?: RemixNode
   head?: RemixNode
   title?: string
@@ -14,11 +17,11 @@ const DEFAULT_TITLE = readAppDisplayName('Remix3')
 
 export function Document(handle: Handle<DocumentProps>) {
   return () => {
-    let { children, head, title = DEFAULT_TITLE } = handle.props
+    let { children, head, i18n, title = DEFAULT_TITLE } = handle.props
     let { href, importMap, preloads } = scriptEntry
 
     return (
-      <html lang="en">
+      <html lang={i18n.locale}>
         <head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -33,7 +36,10 @@ export function Document(handle: Handle<DocumentProps>) {
           ))}
           <script type="module" src={href}></script>
         </head>
-        <body mix={css({ margin: 0 })}>{children}</body>
+        <body mix={css({ margin: 0 })}>
+          <LocaleSwitcher i18n={i18n} />
+          {children}
+        </body>
       </html>
     )
   }

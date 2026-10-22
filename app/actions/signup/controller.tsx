@@ -12,14 +12,18 @@ import { signupForm } from './schema.ts'
 export default createController(routes.signup, {
   actions: {
     index(context) {
-      return context.render(<SignupPage />)
+      return context.render(<SignupPage i18n={context.i18n} />)
     },
     async action(context) {
       let parsed = s.parseSafe(signupForm, context.formData)
       if (!parsed.success) {
         let email = context.formData.get('email')
         return context.render(
-          <SignupPage email={typeof email === 'string' ? email : ''} issues={parsed.issues} />,
+          <SignupPage
+            i18n={context.i18n}
+            email={typeof email === 'string' ? email : ''}
+            issues={parsed.issues}
+          />,
           { status: 400 },
         )
       }
@@ -28,7 +32,11 @@ export default createController(routes.signup, {
       let existing = await db.findOne(users, { where: { email } })
       if (existing) {
         return context.render(
-          <SignupPage email={email} error="An account with that email already exists." />,
+          <SignupPage
+            i18n={context.i18n}
+            email={email}
+            error={context.i18n.t('signup.emailTaken')}
+          />,
           { status: 409 },
         )
       }

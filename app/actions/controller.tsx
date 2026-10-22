@@ -5,6 +5,7 @@ import { Session } from 'remix/session'
 import type { GoodAuth } from 'remix/middleware/auth'
 
 import { assets } from '../assets.ts'
+import { isLocale, localeCookie, safeReturnTo } from '../i18n/index.ts'
 import { routes } from '../routes.ts'
 import { AUTH_SESSION_KEY } from '../session.ts'
 import type { Identity } from '../data/auth.ts'
@@ -18,7 +19,17 @@ export default createController(routes, {
       return (await assets.fetch(context.request)) ?? new Response('Not Found', { status: 404 })
     },
     home(context) {
-      return context.render(<HomePage />)
+      return context.render(<HomePage i18n={context.i18n} />)
+    },
+    async setLocale(context) {
+      let locale = context.formData.get('locale')
+      let response = redirect(safeReturnTo(context.formData.get('returnTo')), 303)
+
+      if (isLocale(locale)) {
+        response.headers.append('Set-Cookie', await localeCookie.serialize(locale))
+      }
+
+      return response
     },
     logout(context) {
       let session = context.get(Session)
@@ -34,11 +45,11 @@ export default createController(routes, {
       ],
       handler(context) {
         let auth = context.get(Auth) as GoodAuth<Identity>
-        return context.render(<AccountPage email={auth.identity.email} />)
+        return context.render(<AccountPage i18n={context.i18n} email={auth.identity.email} />)
       },
     },
     signupSuccess(context) {
-      return context.render(<SignupSuccessPage />)
+      return context.render(<SignupSuccessPage i18n={context.i18n} />)
     },
   },
 })

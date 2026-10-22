@@ -8,4 +8,5 @@ export const routes = route({
   login: form('/login'),
   logout: post('/logout'),
   account: get('/account'),
+  setLocale: post('/locale'),
 })
