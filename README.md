@@ -16,6 +16,15 @@ A minimal Remix application starter with a home page.
 - `app/db.ts`, `app/data/` and `db/migrations/` hold the SQLite database, table definitions, and SQL migrations.
 - `app/session.ts` configures the session cookie.
 
+## Localization
+
+The app ships with English (`en`) and Spanish (`es`). The locale is chosen per request from, in order: the `locale` cookie (set by the language switcher), the `Accept-Language` header, then `en`.
+
+- `app/i18n/messages/en.ts` is the source of truth for message keys. Other locales (for example `es.ts`) are typed against it, so a missing key is a type error.
+- Use `context.i18n.t('key', { param })` in actions and pass `i18n` to pages. `{param}` placeholders are interpolated.
+- `app/ui/locale-switcher.tsx` renders the language switcher in every page through `Document`. It posts to `/locale`, which saves the cookie and redirects back.
+- To add a language, add an entry to `LOCALE_NAMES` in `app/i18n/index.ts` and create `app/i18n/messages/<locale>.ts`.
+
 ## Growing The App
 
 - Put top-level route actions in `app/actions/controller.tsx`.

@@ -10,16 +10,24 @@ import controller from './actions/controller.tsx'
 import signupController from './actions/signup/controller.tsx'
 import loginController from './actions/login/controller.tsx'
 import { assets } from './assets.ts'
+import { loadLocale } from './middleware/locale.ts'
 import { sessionAuthScheme } from './data/auth.ts'
 import { routes } from './routes.ts'
 import { sessionCookie, sessionStorage } from './session.ts'
 
 const renderMiddleware = render({ assets })
+const localeMiddleware = loadLocale()
 const sessionMiddleware = session(sessionCookie, sessionStorage)
 const formDataMiddleware = formData()
 const authMiddleware = auth({ schemes: [sessionAuthScheme] })
 type AppContext = MiddlewareContext<
-  [typeof sessionMiddleware, typeof formDataMiddleware, typeof authMiddleware, typeof renderMiddleware]
+  [
+    typeof localeMiddleware,
+    typeof sessionMiddleware,
+    typeof formDataMiddleware,
+    typeof authMiddleware,
+    typeof renderMiddleware,
+  ]
 >
 
 declare module 'remix' {
@@ -29,7 +37,15 @@ declare module 'remix' {
 }
 
 export const router = createRouter<AppContext>({
-  middleware: [compression(), staticFiles('./public', { index: false }), sessionMiddleware, formDataMiddleware, authMiddleware, renderMiddleware],
+  middleware: [
+    compression(),
+    staticFiles('./public', { index: false }),
+    localeMiddleware,
+    sessionMiddleware,
+    formDataMiddleware,
+    authMiddleware,
+    renderMiddleware,
+  ],
 })
 
 router.map(routes, controller)

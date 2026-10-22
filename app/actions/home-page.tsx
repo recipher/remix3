@@ -1,22 +1,27 @@
 // Delete this file and put your own home page in app/actions/controller.tsx
 import type { Handle, RemixNode } from 'remix/component'
 
+import type { I18n } from '../i18n/index.ts'
 import { routes } from '../routes.ts'
 import { Document } from './document.tsx'
 import { CopyButton } from '../ui/public/copy-button.tsx'
 
-export function HomePage() {
-  return () => (
-    <Document head={<HomeHead />}>
-      <main class="m-0 flex min-h-screen items-center justify-center bg-gray-100 px-6 py-12 font-mono text-sm leading-normal text-gray-900 antialiased dark:bg-gray-900 dark:text-gray-100 [&_*]:box-border">
-        <div class="flex w-full max-w-[820px] flex-col items-center gap-[72px]">
-          <Masthead />
-          <Columns />
-          <Footer />
-        </div>
-      </main>
-    </Document>
-  )
+export function HomePage(handle: Handle<{ i18n: I18n }>) {
+  return () => {
+    let { i18n } = handle.props
+
+    return (
+      <Document i18n={i18n} head={<HomeHead />}>
+        <main class="m-0 flex min-h-screen items-center justify-center bg-gray-100 px-6 py-12 font-mono text-sm leading-normal text-gray-900 antialiased dark:bg-gray-900 dark:text-gray-100 [&_*]:box-border">
+          <div class="flex w-full max-w-[820px] flex-col items-center gap-[72px]">
+            <Masthead i18n={i18n} />
+            <Columns i18n={i18n} />
+            <Footer i18n={i18n} />
+          </div>
+        </main>
+      </Document>
+    )
+  }
 }
 
 function HomeHead() {
@@ -32,46 +37,61 @@ function HomeHead() {
   )
 }
 
-function Masthead() {
+function Masthead(handle: Handle<{ i18n: I18n }>) {
+  let { t } = handle.props.i18n
+
   return () => (
-    <section aria-label="Welcome" class="flex w-full flex-col items-center justify-center gap-9">
-      <p class="m-0 text-center text-sm font-bold uppercase tracking-[0.1em]">Welcome to</p>
+    <section
+      aria-label={t('home.welcomeLabel')}
+      class="flex w-full flex-col items-center justify-center gap-9"
+    >
+      <p class="m-0 text-center text-sm font-bold uppercase tracking-[0.1em]">
+        {t('home.welcome')}
+      </p>
       <RemixWordmarkHero />
     </section>
   )
 }
 
-function Columns() {
+function Columns(handle: Handle<{ i18n: I18n }>) {
+  let { i18n } = handle.props
+
   return () => (
     <section
-      aria-label="Getting started"
+      aria-label={i18n.t('home.gettingStartedLabel')}
       class="flex w-full flex-col items-stretch justify-center gap-4 min-[721px]:w-auto min-[721px]:flex-row"
     >
-      <GetStartedCard />
-      <CodingWithAiCard />
+      <GetStartedCard i18n={i18n} />
+      <CodingWithAiCard i18n={i18n} />
     </section>
   )
 }
 
-function GetStartedCard() {
+function GetStartedCard(handle: Handle<{ i18n: I18n }>) {
+  let { t } = handle.props.i18n
+
   return () => (
     <Card class="flex-none">
-      <CardHeader>Get started</CardHeader>
+      <CardHeader>{t('home.getStarted')}</CardHeader>
       <ul class="m-0 flex w-full list-none flex-col items-stretch p-0">
         <li>
-          <CardLink href={routes.signup.index.href()} icon={<UserPlusIcon />} label="Sign up" />
+          <CardLink
+            href={routes.signup.index.href()}
+            icon={<UserPlusIcon />}
+            label={t('home.signup')}
+          />
         </li>
         <li>
-          <CardLink href={routes.login.index.href()} icon={<LoginIcon />} label="Log in" />
+          <CardLink href={routes.login.index.href()} icon={<LoginIcon />} label={t('home.login')} />
         </li>
         <li>
-          <CardLink href="https://api.remix.run" icon={<AtomIcon />} label="Remix API" />
+          <CardLink href="https://api.remix.run" icon={<AtomIcon />} label={t('home.api')} />
         </li>
         <li>
           <CardLink
             href="https://discord.gg/xwx7mMzVkA"
             icon={<DiscordFaceIcon />}
-            label="Join Discord"
+            label={t('home.discord')}
           />
         </li>
       </ul>
@@ -79,30 +99,48 @@ function GetStartedCard() {
   )
 }
 
-function CodingWithAiCard() {
+function CodingWithAiCard(handle: Handle<{ i18n: I18n }>) {
+  let { i18n } = handle.props
+  let { t } = i18n
+
   return () => (
     <Card class="justify-center max-[720px]:w-full min-[721px]:w-[540px]">
-      <CardHeader>Coding with AI?</CardHeader>
+      <CardHeader>{t('home.aiTitle')}</CardHeader>
       <div class="flex w-full flex-col items-stretch">
         <p class="m-0 px-4 pb-4 text-sm leading-[1.67] text-gray-600 dark:text-gray-400">
-          Navigate to this project folder using your preferred AI-powered tool, and try copying any
-          of these prompts into the agent chat:
+          {t('home.aiIntro')}
         </p>
-        <PromptRow text="I want to build a simple headless Shopify store, what does Remix have available to help scaffold this?" />
-        <PromptRow text="Add a sqlite database with a users table and scaffold a signup flow" />
-        <PromptRow text="Make a copy to clipboard component that confirms to the user it was copied then resets after a few seconds" />
-        <PromptRow text="Add compression middleware" />
+        <PromptRow
+          i18n={i18n}
+          text="I want to build a simple headless Shopify store, what does Remix have available to help scaffold this?"
+        />
+        <PromptRow
+          i18n={i18n}
+          text="Add a sqlite database with a users table and scaffold a signup flow"
+        />
+        <PromptRow
+          i18n={i18n}
+          text="Make a copy to clipboard component that confirms to the user it was copied then resets after a few seconds"
+        />
+        <PromptRow i18n={i18n} text="Add compression middleware" />
       </div>
     </Card>
   )
 }
 
-function PromptRow(handle: Handle<{ text: string }>) {
+function PromptRow(handle: Handle<{ i18n: I18n; text: string }>) {
+  let { t } = handle.props.i18n
+
   return () => (
     <div class="flex items-center gap-4 rounded-xl p-4 transition-colors duration-150 hover:bg-gray-100 dark:hover:bg-gray-700">
       <p class="m-0 min-w-0 flex-1 text-sm leading-normal">&ldquo;{handle.props.text}&rdquo;</p>
       <div class="flex-none">
-        <CopyButton text={handle.props.text} />
+        <CopyButton
+          text={handle.props.text}
+          label={t('copy.copy')}
+          copiedLabel={t('copy.copied')}
+          failedLabel={t('copy.failed')}
+        />
       </div>
     </div>
   )
@@ -119,11 +157,7 @@ function Card(handle: Handle<{ class?: string; children?: RemixNode }>) {
 }
 
 function CardHeader(handle: Handle<{ children?: RemixNode }>) {
-  return () => (
-    <h2 class="m-0 w-full text-2xl font-bold tracking-tight">
-      {handle.props.children}
-    </h2>
-  )
+  return () => <h2 class="m-0 w-full text-2xl font-bold tracking-tight">{handle.props.children}</h2>
 }
 
 function CardLink(handle: Handle<{ href: string; icon: RemixNode; label: string }>) {
@@ -153,13 +187,15 @@ function IconSlot(handle: Handle<{ children: RemixNode }>) {
   )
 }
 
-function Footer() {
+function Footer(handle: Handle<{ i18n: I18n }>) {
+  let { t } = handle.props.i18n
+
   return () => (
     <footer class="flex flex-col items-center justify-center gap-2.5">
       <div class="flex items-center justify-center gap-6">
         <FooterWordmark />
         <nav
-          aria-label="Remix social links"
+          aria-label={t('home.socialLabel')}
           class="flex items-center justify-end gap-4 text-gray-500 dark:text-gray-400 [&_a]:inline-flex [&_a]:size-5 [&_a]:items-center [&_a]:justify-center [&_a]:text-inherit [&_a]:transition-colors [&_a]:duration-150 [&_a:focus-visible]:text-gray-900 [&_a:focus-visible]:outline-none [&_a:hover]:text-gray-900 dark:[&_a:focus-visible]:text-gray-100 dark:[&_a:hover]:text-gray-100 [&_svg]:block [&_svg]:size-full"
         >
           <a href="https://github.com/remix-run/remix" aria-label="GitHub">
@@ -177,7 +213,7 @@ function Footer() {
         </nav>
       </div>
       <div class="flex flex-col items-center justify-center gap-3 text-center text-[10px] leading-[1.6] tracking-[0.05em] text-gray-500 dark:text-gray-400 [&_p]:m-0 [&_p]:whitespace-nowrap">
-        <p>DOCS AND EXAMPLES LICENSED UNDER MIT</p>
+        <p>{t('home.license')}</p>
         <p>&copy;2026 SHOPIFY, INC.</p>
       </div>
     </footer>
@@ -186,7 +222,14 @@ function Footer() {
 
 function UserPlusIcon() {
   return () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
       <path d="M15 19a6 6 0 0 0-12 0M9 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM19 8v6M22 11h-6" />
     </svg>
   )
@@ -194,7 +237,14 @@ function UserPlusIcon() {
 
 function LoginIcon() {
   return () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
       <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3" />
     </svg>
   )
