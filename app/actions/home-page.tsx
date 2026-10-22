@@ -146,10 +146,10 @@ function PromptRow(handle: Handle<{ i18n: I18n; text: string }>) {
   )
 }
 
-function Card(handle: Handle<{ class?: string; children?: RemixNode }>) {
+function Card(handle: Handle<{ class: string; children?: RemixNode }>) {
   return () => (
     <div
-      class={`flex flex-col items-center gap-6 rounded-2xl bg-white p-8 shadow-lg dark:bg-gray-800 ${handle.props.class ?? ''}`}
+      class={`flex flex-col items-center gap-6 rounded-2xl bg-white p-8 shadow-lg dark:bg-gray-800 ${handle.props.class}`}
     >
       {handle.props.children}
     </div>

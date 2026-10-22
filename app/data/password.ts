@@ -1,11 +1,12 @@
 import { randomBytes, scrypt, timingSafeEqual } from 'node:crypto'
+import { promisify } from 'node:util'
 
 const KEY_LENGTH = 64
 
-function derive(password: string, salt: Buffer): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    scrypt(password, salt, KEY_LENGTH, (error, key) => (error ? reject(error) : resolve(key)))
-  })
+const scryptAsync = promisify(scrypt)
+
+async function derive(password: string, salt: Buffer): Promise<Buffer> {
+  return (await scryptAsync(password, salt, KEY_LENGTH)) as Buffer
 }
 
 /** Returns `salt:hash`, both hex-encoded. */

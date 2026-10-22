@@ -102,4 +102,10 @@ describe('csrf protection', () => {
     assert.equal(blocked.status, 403)
     assert.equal((await get(routes.account.href(), cookie)).status, 200)
   })
+
+  it('keeps the same token for the same session', async () => {
+    let first = await getCsrf()
+    let again = await getCsrf(first.cookie)
+    assert.equal(again.token, first.token)
+  })
 })

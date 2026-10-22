@@ -28,6 +28,14 @@ describe('createI18n', () => {
     assert.equal(createI18n('es').t('signup.passwordHint', { min: 8 }), 'Mínimo 8 caracteres.')
   })
 
+  it('leaves a placeholder untouched when its param is not provided', () => {
+    assert.equal(createI18n('en').t('signup.passwordHint', {}), 'At least {min} characters.')
+    assert.equal(
+      createI18n('es').t('signup.passwordLength', { min: 8 }),
+      'La contraseña debe tener entre 8 y {max} caracteres.',
+    )
+  })
+
   it('every locale defines exactly the same keys as English', () => {
     assert.deepEqual(Object.keys(es).sort(), Object.keys(en).sort())
     assert.deepEqual(LOCALES.sort(), ['en', 'es'])

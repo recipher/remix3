@@ -18,7 +18,8 @@ export interface PostOptions {
 export async function getCsrf(cookie?: string): Promise<{ token: string; cookie: string }> {
   let response = await get('/login', cookie)
   let html = await response.text()
-  let token = html.match(/name="_csrf"[^>]*value="([^"]+)"/)?.[1] ?? ''
+  let token = html.match(/name="_csrf"[^>]*value="([^"]+)"/)?.[1]
+  if (!token) throw new Error(`No CSRF token found on /login (status ${response.status})`)
   return { token, cookie: sessionCookieFrom(response) || cookie || '' }
 }
 

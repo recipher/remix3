@@ -1,6 +1,8 @@
 import * as assert from 'remix/assert'
 import { describe, it } from 'remix/test'
 
+import { users } from '../../data/tables.ts'
+import { db } from '../../db.ts'
 import { routes } from '../../routes.ts'
 import { get, password, post, sessionCookieFrom, uniqueEmail } from '../test-utils.ts'
 
@@ -103,5 +105,25 @@ describe('account (protected route)', () => {
     let first = sessionCookieFrom(await logIn(email))
     let second = sessionCookieFrom(await logIn(email))
     assert.notEqual(first, second)
+  })
+
+  it('ends the session when the user has been deleted', async () => {
+    let email = await signUp()
+    let cookie = sessionCookieFrom(await logIn(email))
+    assert.equal((await get(routes.account.href(), cookie)).status, 200)
+
+    let user = await db.findOne(users, { where: { email } })
+    assert.ok(user)
+    await db.delete(users, user.id)
+
+    let response = await get(routes.account.href(), cookie)
+    assert.equal(response.status, 303)
+    assert.equal(response.headers.get('Location'), routes.login.index.href())
+
+    // The stale login is removed from the session, not just ignored for this request.
+    let cleaned = sessionCookieFrom(response)
+    assert.ok(cleaned)
+    assert.notEqual(cleaned, cookie)
+    assert.equal((await get(routes.account.href(), cleaned)).status, 303)
   })
 })

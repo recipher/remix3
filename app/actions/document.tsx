@@ -46,6 +46,7 @@ export function Document(handle: Handle<DocumentProps>) {
   }
 }
 
-function readAppDisplayName(value: string): string {
+/** Resolves the title injected at scaffold time, or a default for an unreplaced `%%…%%` placeholder. */
+export function readAppDisplayName(value: string): string {
   return value.startsWith('%%') ? 'Remix App' : decodeURIComponent(value)
 }
