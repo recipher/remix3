@@ -6,6 +6,7 @@ import type { GoodAuth } from 'remix/middleware/auth'
 
 import { assets } from '../assets.ts'
 import { routes } from '../routes.ts'
+import { AUTH_SESSION_KEY } from '../session.ts'
 import type { Identity } from '../data/auth.ts'
 import { AccountPage } from './account/page.tsx'
 import { HomePage } from './home-page.tsx'
@@ -21,7 +22,7 @@ export default createController(routes, {
     },
     logout(context) {
       let session = context.get(Session)
-      session.unset('auth')
+      session.unset(AUTH_SESSION_KEY)
       session.regenerateId(true)
       return redirect(routes.login.index.href(), 303)
     },

@@ -1,6 +1,7 @@
 import type { Handle } from 'remix/component'
 import type { Issue } from 'remix/data-schema'
 
+import { PASSWORD_MIN_LENGTH } from '../../data/password-rules.ts'
 import { routes } from '../../routes.ts'
 import { buttonClass, CardPage, ErrorAlert, Field, linkClass } from '../../ui/layout.tsx'
 
@@ -32,10 +33,10 @@ export function SignupPage(handle: Handle<SignupPageProps>) {
             label="Password"
             type="password"
             autoComplete="new-password"
-            minLength={8}
+            minLength={PASSWORD_MIN_LENGTH}
             error={issueFor('password')}
           />
-          <p class="-mt-2 text-xs text-gray-500 dark:text-gray-400">At least 8 characters.</p>
+          <p class="-mt-2 text-xs text-gray-500 dark:text-gray-400">At least {PASSWORD_MIN_LENGTH} characters.</p>
           <button type="submit" class={buttonClass}>
             Create account
           </button>

@@ -1,6 +1,9 @@
 import { createCookie } from 'remix/cookie'
 import { createCookieSessionStorage } from 'remix/session-storage/cookie'
 
+/** Session key under which the signed-in user's record is stored. */
+export const AUTH_SESSION_KEY = 'auth'
+
 const secret = process.env.SESSION_SECRET ?? 'dev-only-insecure-secret'
 
 if (process.env.NODE_ENV === 'production' && !process.env.SESSION_SECRET) {

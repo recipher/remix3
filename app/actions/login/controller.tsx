@@ -4,6 +4,7 @@ import { createController } from 'remix/router'
 
 import { passwordProvider } from '../../data/auth.ts'
 import { routes } from '../../routes.ts'
+import { AUTH_SESSION_KEY } from '../../session.ts'
 import { LoginPage } from './page.tsx'
 
 export default createController(routes.login, {
@@ -27,7 +28,7 @@ export default createController(routes.login, {
 
       // Rotates the session id to prevent session fixation.
       let session = completeAuth(context)
-      session.set('auth', { userId: identity.id })
+      session.set(AUTH_SESSION_KEY, { userId: identity.id })
 
       return redirect(routes.account.href(), 303)
     },

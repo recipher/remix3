@@ -2,6 +2,7 @@ import { createCredentialsAuthProvider } from 'remix/auth'
 import { createSessionAuthScheme } from 'remix/middleware/auth'
 
 import { db } from '../db.ts'
+import { AUTH_SESSION_KEY } from '../session.ts'
 import { hashPassword, verifyPassword } from './password.ts'
 import { users } from './tables.ts'
 import type { User } from './tables.ts'
@@ -31,13 +32,13 @@ export const passwordProvider = createCredentialsAuthProvider({
 
 export const sessionAuthScheme = createSessionAuthScheme<Identity, { userId: string }>({
   read(session) {
-    return (session.get('auth') as { userId: string } | null) ?? null
+    return (session.get(AUTH_SESSION_KEY) as { userId: string } | null) ?? null
   },
   async verify(value) {
     let user = await db.find(users, value.userId)
     return user ? { id: user.id, email: user.email } : null
   },
   invalidate(session) {
-    session.unset('auth')
+    session.unset(AUTH_SESSION_KEY)
   },
 })
