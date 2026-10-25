@@ -2,17 +2,6 @@
 
 This app was scaffolded with `remix new`. Use these conventions when continuing to build it out.
 
-## Commands
-
-```sh
-npm i
-npm run dev
-npm run hmr
-npm run start
-npm test
-npm run typecheck
-```
-
 Use `npm run hmr` for live server and browser updates; `npm run dev` only watches and restarts the server. `npm run start` runs in production mode without a separate build step.
 
 ## Building Features
@@ -30,3 +19,17 @@ Refer to ./.agents/skills/remix/SKILL.md for the Remix mental model and how to f
 - Root `public/` contains static files served unchanged from the app root
 
 This starter intentionally begins small; add directories like `app/data/`, `app/middleware/`, `app/ui/`, and `test/` only when you need them.
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in GitHub Issues for `recipher/remix3`, via the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one `GLOSSARY.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.

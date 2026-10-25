@@ -5,7 +5,7 @@ import { createSqliteDatabase } from 'remix/data-table/sqlite'
 const filename =
   process.env.NODE_ENV === 'test'
     ? ':memory:'
-    : fileURLToPath(new URL('../db/app.sqlite', import.meta.url))
+    : (process.env.DATABASE_PATH ?? fileURLToPath(new URL('../db/app.sqlite', import.meta.url)))
 
 export const db = createSqliteDatabase({ filename, foreignKeys: true })
 
