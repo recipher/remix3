@@ -48,6 +48,15 @@ export const en = {
   'account.signedInAs': 'Signed in as',
   'account.copyEmail': 'Copy email',
   'account.logout': 'Log out',
+
+  'nav.label': 'Main',
+  'nav.home': 'Home',
+  'nav.dashboard': 'Dashboard',
+  'nav.account': 'Account',
+
+  'dashboard.title': 'Dashboard',
+  'dashboard.welcome': 'Welcome back, {email}.',
+  'dashboard.empty': 'Nothing here yet.',
 } as const
 
 export type MessageKey = keyof typeof en

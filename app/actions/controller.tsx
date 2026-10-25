@@ -11,6 +11,7 @@ import { routes } from '../routes.ts'
 import { AUTH_SESSION_KEY } from '../session.ts'
 import type { Identity } from '../data/auth.ts'
 import { AccountPage } from './account/page.tsx'
+import { DashboardPage } from './dashboard/page.tsx'
 import { HomePage } from './home-page.tsx'
 import { SignupSuccessPage } from './signup/page.tsx'
 
@@ -48,6 +49,23 @@ export default createController(routes, {
         let auth = context.get(Auth) as GoodAuth<Identity>
         return context.render(
           <AccountPage
+            i18n={context.i18n}
+            csrfToken={getCsrfToken(context)}
+            email={auth.identity.email}
+          />,
+        )
+      },
+    },
+    dashboard: {
+      middleware: [
+        requireAuth({
+          onFailure: () => redirect(routes.login.index.href(), 303),
+        }),
+      ],
+      handler(context) {
+        let auth = context.get(Auth) as GoodAuth<Identity>
+        return context.render(
+          <DashboardPage
             i18n={context.i18n}
             csrfToken={getCsrfToken(context)}
             email={auth.identity.email}

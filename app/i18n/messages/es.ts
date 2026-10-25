@@ -49,4 +49,13 @@ export const es: Messages = {
   'account.signedInAs': 'Sesión iniciada como',
   'account.copyEmail': 'Copiar correo',
   'account.logout': 'Cerrar sesión',
+
+  'nav.label': 'Principal',
+  'nav.home': 'Inicio',
+  'nav.dashboard': 'Panel',
+  'nav.account': 'Cuenta',
+
+  'dashboard.title': 'Panel',
+  'dashboard.welcome': 'Te damos la bienvenida, {email}.',
+  'dashboard.empty': 'Aún no hay nada aquí.',
 }

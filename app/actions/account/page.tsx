@@ -4,6 +4,7 @@ import type { I18n } from '../../i18n/index.ts'
 import { routes } from '../../routes.ts'
 import { CsrfField } from '../../ui/csrf-field.tsx'
 import { CardPage } from '../../ui/layout.tsx'
+import { NavBar } from '../../ui/nav-bar.tsx'
 import { CopyButton } from '../../ui/public/copy-button.tsx'
 
 export function AccountPage(handle: Handle<{ i18n: I18n; csrfToken: string; email: string }>) {
@@ -13,6 +14,7 @@ export function AccountPage(handle: Handle<{ i18n: I18n; csrfToken: string; emai
 
     return (
       <CardPage i18n={i18n} csrfToken={csrfToken} title={t('account.title')}>
+        <NavBar i18n={i18n} current="account" />
         <p class="mb-1 text-sm text-gray-500 dark:text-gray-400">{t('account.signedInAs')}</p>
         <p class="mb-3 break-all font-medium">{email}</p>
         <div class="mb-6">
